@@ -1,23 +1,23 @@
 # Machine Learning Assignment 2
-
+ 
 **BITS ID: 2025NS04011**
-
+ 
 ## Software Defect Prediction - PROMISE Dataset
-
+ 
 > BITS Pilani · Machine Learning · Assignment 2 - an end-to-end classification project with five models and a Streamlit app ("Defect Radar").
-
+ 
 ## 1. Problem Statement
-
+ 
 Software defect prediction using the PROMISE dataset.
-
+ 
 Given the static code metrics (McCabe and Halstead) of a software module, predict whether the module is
 **defective (1)** or **non-defective (0)**. Early identification of defect-prone modules lets teams focus code
 reviews and testing where they matter most. Five classifiers (Logistic Regression, Decision Tree, KNN, Gaussian
 Naive Bayes, SVM) are trained on the same preprocessed data and compared using Accuracy, AUC, Precision, Recall,
 F1 and the Matthews Correlation Coefficient (MCC).
-
+ 
 ## 2. Dataset Description
-
+ 
 | Item | Details |
 |---|---|
 | **Source** | PROMISE repository (NASA Metrics Data Program) - Kaggle collection [`fracpete/promisedata`](https://www.kaggle.com/datasets/fracpete/promisedata). The Kaggle download requires an API token, so `src/download_data.py` fetches the same PROMISE ARFF files **JM1, KC1, KC2 and PC1** from the public OpenML mirror and merges them. These four projects share an identical set of 21 metrics. |
@@ -27,9 +27,9 @@ F1 and the Matthews Correlation Coefficient (MCC).
 | **Class distribution (raw)** | Non Defective 12,009 (82.1 %) · Defective 2,616 (17.9 %) |
 | **Class distribution (cleaned)** | Non Defective 8,755 (78.2 %) · Defective 2,438 (21.8 %) |
 | **Train / test split** | Stratified 80 / 20 → 8,954 train rows and 2,239 test rows (1,751 non-defective / 488 defective) |
-
+ 
 ### Preprocessing pipeline (`src/preprocessing.py`)
-
+ 
 1. **Load** the merged CSV (`data/promise_defects.csv`).
 2. **Missing values** - 25 missing cells (JM1) are imputed with the *training-set median* (fitted after the split, so there is no leakage).
 3. **Duplicates** - 3,250 exact duplicate rows removed *before* the split (otherwise identical modules could land in both train and test).
@@ -38,17 +38,17 @@ F1 and the Matthews Correlation Coefficient (MCC).
 6. **Features / target separation** and **stratified** `train_test_split` (`test_size=0.2`).
 7. **Transform and scale** - all metrics are heavily right-skewed, so `log1p` is applied first, then `StandardScaler` (fitted on the training data only) and applied identically to every model.
 8. **Reproducibility** - fixed seed `42` for the split, resampling, cross-validation and all stochastic estimators.
-
+ 
 ## 3. GitHub Repository Link
-
+ 
 https://github.com/2025NS04011-Muthu/MachineLearning_Assignment-2.git
-
+ 
 **Deployed Streamlit app:** https://machine-learning-assignment-2-muthu.streamlit.app/
-
+ 
 ## 4. Models Used
-
+ 
 All five models are trained on the same scaled, balanced training set and evaluated on the same 2,239-row hold-out set (`test_data.csv`).
-
+ 
 | Model | Accuracy | AUC | Precision | Recall | F1 | MCC |
 |---|---|---|---|---|---|---|
 | Logistic Regression | 0.6717 | **0.7084** | 0.3562 | 0.6270 | **0.4543** | **0.2642** |
@@ -56,11 +56,11 @@ All five models are trained on the same scaled, balanced training set and evalua
 | KNN | 0.6396 | 0.6889 | 0.3323 | **0.6475** | 0.4392 | 0.2379 |
 | Naive Bayes | **0.7021** | 0.6713 | **0.3638** | 0.4898 | 0.4175 | 0.2276 |
 | SVM | 0.6695 | 0.6975 | 0.3489 | 0.5963 | 0.4402 | 0.2444 |
-
+ 
 *Bold = best value in the column. Hyper-parameters were chosen by 3-fold stratified cross-validation (ROC-AUC) on the **training** data only (over-sampling is done inside each fold; the hold-out set is never used): Logistic Regression `C=10`; Decision Tree `max_depth=4, min_samples_leaf=20`; KNN `n_neighbors=101, weights="uniform"`; GaussianNB `var_smoothing=0.1`; SVM `RBF, C=1, gamma=0.01, probability=True`. Re-run the search with `python -m src.train_models --tune`.*
-
+ 
 ## 5. Model Observations
-
+ 
 | Model | Observation |
 |---|---|
 | **Logistic Regression** | Best overall. After the `log1p` + standardisation the metric/defect relationship is close to linear, so a linear boundary generalises best: highest AUC (0.708), F1 (0.454) and MCC (0.264), with recall 0.63. It is also the cheapest and most interpretable model (largest weights: Halstead volume `v`, length `n`, total operands). |
@@ -68,50 +68,50 @@ All five models are trained on the same scaled, balanced training set and evalua
 | **KNN** | Highest recall (0.65) but low precision (0.33), so many clean modules are flagged. It only becomes competitive with a large neighbourhood (k = 101): with k = 7 its AUC was 0.64, because small neighbourhoods are very noisy on this data. |
 | **Naive Bayes** | Highest accuracy (0.70) and precision (0.36) but the lowest recall (0.49), AUC (0.67) and MCC (0.23): the Gaussian, feature-independence assumption does not hold for the strongly correlated Halstead metrics. |
 | **SVM** | Second best (AUC 0.698, MCC 0.244, F1 0.440). The RBF kernel adds little over the linear boundary for this data, while training is by far the slowest (probability calibration) and the model file is large. |
-
+ 
 > Absolute scores are modest for every model (AUC ≈ 0.67-0.71, which is typical for the de-duplicated NASA/PROMISE
 > data). Static code metrics only weakly separate defective modules, and removing the ~22 % duplicate rows takes away
 > the artificial optimism of leaked copies. Accuracy alone is misleading (a "never defective" model would score 78 %),
 > which is why MCC, F1 and AUC are used for the ranking.
-
+ 
 ## 6. Overall Best Model
-
+ 
 **Winner: Logistic Regression**
-
+ 
 | Criterion | Rank 1 | Rank 2 |
 |---|---|---|
 | MCC | **Logistic Regression (0.2642)** | SVM (0.2444) |
 | F1 | **Logistic Regression (0.4543)** | SVM (0.4402) |
 | AUC | **Logistic Regression (0.7084)** | SVM (0.6975) |
-
+ 
 Logistic Regression ranks first on all three criteria. **Why it performed best:** after the `log1p` transform and
 standardisation, the relationship between size/complexity metrics and defect-proneness is largely monotonic and close
 to linear, which a regularised linear model captures without overfitting. Higher-capacity models (Decision Tree,
 KNN) are more sensitive to noisy labels and to the over-sampled minority rows, Naive Bayes violates its independence
 assumption on correlated metrics, and the RBF-SVM reaches slightly lower quality at a much higher training and
 storage cost. Logistic Regression is also the simplest, fastest and most explainable option.
-
+ 
 ## 7. Run Instructions
-
+ 
 ```bash
 pip install -r requirements.txt
-
+ 
 streamlit run app.py
 ```
-
+ 
 Optional - rebuild everything from scratch (the repository already ships the dataset, trained models and `test_data.csv`):
-
+ 
 ```bash
 python -m src.download_data      # download + merge the PROMISE projects -> data/promise_defects.csv
 python -m src.train_models       # preprocess, train 5 models, save model/*.pkl, metrics.csv, test_data.csv
 python -m src.train_models --tune  # same, but re-run the cross-validated hyper-parameter search first
 python -m src.generate_test_data # regenerate only test_data.csv (deterministic)
 ```
-
+ 
 `notebooks/training.ipynb` walks through the same pipeline step by step with plots.
-
+ 
 ### Project structure
-
+ 
 ```
 ├── app.py                  # Streamlit application ("Defect Radar")
 ├── requirements.txt
@@ -132,75 +132,75 @@ python -m src.generate_test_data # regenerate only test_data.csv (deterministic)
     ├── generate_test_data.py
     └── utils.py            # paths, constants, logging, seeding, JSON helpers
 ```
-
+ 
 ### Using the app
-
+ 
 1. **Upload & Validate** - upload `test_data.csv` (or click *Load bundled test_data.csv*). The 21 metric columns are mandatory; `defects` is optional (without it only predictions are produced).
 2. **Evaluate Model** - choose one of the five models: prediction counts, the six metrics, seaborn confusion-matrix heatmap, ROC curve, classification report, prediction table and a CSV download.
 3. **Compare Models** - leaderboard (ranked by MCC → F1 → AUC), grouped bar chart, radar chart and ROC overlay for all five models.
 4. **Insights** - Decision Tree feature importance, Logistic Regression weights and the data-cleaning log.
-
+ 
 ## 8. Streamlit Deployment Instructions
-
+ 
 **Live app:** https://machine-learning-assignment-2-muthu.streamlit.app/
-
+ 
 1. Push the project (including `model/`, `data/` and `test_data.csv`) to a public GitHub repository.
 2. Open [share.streamlit.io](https://share.streamlit.io) and sign in with GitHub.
 3. Click **Create app** → **Deploy a public app from GitHub**.
 4. Select the repository and branch, and set **Main file path** to `app.py`.
 5. (Optional) In *Advanced settings* choose Python 3.11 or newer.
 6. Click **Deploy**. Streamlit Cloud installs `requirements.txt` automatically; no code changes are required.
-
+ 
 If the pickled models were created with a different scikit-learn version than the one installed on the server, the app
 detects this on start-up and transparently retrains the five models from the bundled `data/promise_defects.csv`
 (about 30 seconds), so deployment never fails because of version drift.
-
+ 
 <div style="page-break-before: always; break-before: page;"></div>
-
+ 
 ## 9. Screenshots Section
-
+ 
 ### Local execution
-
+ 
 Run with `streamlit run app.py` and opened at `http://localhost:8501`.
-
+ 
 <div style="page-break-inside: avoid; break-inside: avoid;"><p style="page-break-after: avoid; break-after: avoid;"><strong>Figure L1 - Terminal: app started (<code>streamlit run app.py</code>)</strong></p><img src="Evidence/local_01_terminal_run.png" alt="Local terminal - streamlit run app.py" style="width:100%;"></div>
-
+ 
 <div style="page-break-before: always; break-before: page; page-break-inside: avoid; break-inside: avoid;"><p style="page-break-after: avoid; break-after: avoid;"><strong>Figure L2 - Home page</strong></p><img src="Evidence/local_02_home.png" alt="Home page" style="width:100%;"></div>
-
+ 
 <div style="page-break-before: always; break-before: page; page-break-inside: avoid; break-inside: avoid;"><p style="page-break-after: avoid; break-after: avoid;"><strong>Figure L3 - Home page: hold-out results from training</strong></p><img src="Evidence/local_03_home_training_results.png" alt="Hold-out results from training" style="width:100%;"></div>
-
+ 
 <div style="page-break-before: always; break-before: page; page-break-inside: avoid; break-inside: avoid;"><p style="page-break-after: avoid; break-after: avoid;"><strong>Figure L4 - Upload and validate <code>test_data.csv</code></strong></p><img src="Evidence/local_04_upload_validate.png" alt="Upload and validate" style="width:100%;"></div>
-
+ 
 <div style="page-break-before: always; break-before: page; page-break-inside: avoid; break-inside: avoid;"><p style="page-break-after: avoid; break-after: avoid;"><strong>Figure L5 - Evaluate Model (Logistic Regression): prediction results and metrics</strong></p><img src="Evidence/local_05_evaluate_prediction_results.png" alt="Prediction results" style="width:100%;"></div>
-
+ 
 <div style="page-break-before: always; break-before: page; page-break-inside: avoid; break-inside: avoid;"><p style="page-break-after: avoid; break-after: avoid;"><strong>Figure L6 - Evaluate Model (Logistic Regression): confusion matrix heatmap</strong></p><img src="Evidence/local_06_confusion_matrix.png" alt="Confusion matrix heatmap" style="width:100%;"></div>
-
+ 
 <div style="page-break-before: always; break-before: page; page-break-inside: avoid; break-inside: avoid;"><p style="page-break-after: avoid; break-after: avoid;"><strong>Figure L7 - Evaluate Model (Logistic Regression): ROC curve</strong></p><img src="Evidence/local_07_roc_curve.png" alt="ROC curve" style="width:100%;"></div>
-
+ 
 <div style="page-break-before: always; break-before: page; page-break-inside: avoid; break-inside: avoid;"><p style="page-break-after: avoid; break-after: avoid;"><strong>Figure L8 - Evaluate Model (Logistic Regression): classification report</strong></p><img src="Evidence/local_08_classification_report.png" alt="Classification report" style="width:100%;"></div>
-
+ 
 <div style="page-break-before: always; break-before: page; page-break-inside: avoid; break-inside: avoid;"><p style="page-break-after: avoid; break-after: avoid;"><strong>Figure L9 - Compare Models: leaderboard of all five models</strong></p><img src="Evidence/local_09_compare_leaderboard.png" alt="Model comparison leaderboard" style="width:100%;"></div>
-
+ 
 <div style="page-break-before: always; break-before: page; page-break-inside: avoid; break-inside: avoid;"><p style="page-break-after: avoid; break-after: avoid;"><strong>Figure L10 - Compare Models: performance comparison chart</strong></p><img src="Evidence/local_10_compare_performance_chart.png" alt="Model performance comparison chart" style="width:100%;"></div>
-
+ 
 <div style="page-break-before: always; break-before: page; page-break-inside: avoid; break-inside: avoid;"><p style="page-break-after: avoid; break-after: avoid;"><strong>Figure L11 - Compare Models: radar chart</strong></p><img src="Evidence/local_11_compare_radar.png" alt="Radar chart" style="width:100%;"></div>
-
+ 
 <div style="page-break-before: always; break-before: page; page-break-inside: avoid; break-inside: avoid;"><p style="page-break-after: avoid; break-after: avoid;"><strong>Figure L12 - Compare Models: ROC curves of all five models</strong></p><img src="Evidence/local_12_compare_roc_curves.png" alt="ROC curves of all models" style="width:100%;"></div>
-
+ 
 <div style="page-break-before: always; break-before: page;"></div>
-
+ 
 ### Streamlit Cloud deployment
-
+ 
 Live app: https://machine-learning-assignment-2-muthu.streamlit.app/
-
+ 
 <div style="page-break-inside: avoid; break-inside: avoid;"><p style="page-break-after: avoid; break-after: avoid;"><strong>Figure C1 - Streamlit Cloud: upload and validate</strong></p><img src="Evidence/cloud_01_upload_validate.png" alt="Cloud - upload and validate" style="width:100%;"></div>
-
+ 
 <div style="page-break-before: always; break-before: page; page-break-inside: avoid; break-inside: avoid;"><p style="page-break-after: avoid; break-after: avoid;"><strong>Figure C2 - Streamlit Cloud: Evaluate Model (Decision Tree) prediction results</strong></p><img src="Evidence/cloud_02_evaluate_prediction_results.png" alt="Cloud - evaluate model (Decision Tree) prediction results" style="width:100%;"></div>
-
+ 
 <div style="page-break-before: always; break-before: page; page-break-inside: avoid; break-inside: avoid;"><p style="page-break-after: avoid; break-after: avoid;"><strong>Figure C3 - Streamlit Cloud: confusion matrix</strong></p><img src="Evidence/cloud_03_confusion_matrix.png" alt="Cloud - confusion matrix" style="width:100%;"></div>
-
+ 
 <div style="page-break-before: always; break-before: page; page-break-inside: avoid; break-inside: avoid;"><p style="page-break-after: avoid; break-after: avoid;"><strong>Figure C4 - Streamlit Cloud: model comparison leaderboard</strong></p><img src="Evidence/cloud_04_compare_leaderboard.png" alt="Cloud - model comparison leaderboard" style="width:100%;"></div>
-
+ 
 > The screenshots were taken on a machine whose scikit-learn version differs from the one used to create the saved
 > models, so the app retrained the models on start-up (see section 8). Because of this, a few values (for example
 > Logistic Regression MCC 0.256, KNN recall 0.646-0.648) differ slightly from the table in section 4.
