@@ -1,4 +1,8 @@
-# Software Defect Prediction - PROMISE Dataset
+# Machine Learning Assignment 2
+
+**BITS ID: 2025NS04011**
+
+## Software Defect Prediction - PROMISE Dataset
 
 > BITS Pilani · Machine Learning · Assignment 2 - an end-to-end classification project with five models and a Streamlit app ("Defect Radar").
 
@@ -37,7 +41,9 @@ F1 and the Matthews Correlation Coefficient (MCC).
 
 ## 3. GitHub Repository Link
 
-https://github.com/2025NS04011-Muthu/Muthu_MachineLearning_Assignment-2.git
+https://github.com/2025NS04011-Muthu/MachineLearning_Assignment-2.git
+
+**Deployed Streamlit app:** https://machine-learning-assignment-2-muthu.streamlit.app/
 
 ## 4. Models Used
 
@@ -136,6 +142,8 @@ python -m src.generate_test_data # regenerate only test_data.csv (deterministic)
 
 ## 8. Streamlit Deployment Instructions
 
+**Live app:** https://machine-learning-assignment-2-muthu.streamlit.app/
+
 1. Push the project (including `model/`, `data/` and `test_data.csv`) to a public GitHub repository.
 2. Open [share.streamlit.io](https://share.streamlit.io) and sign in with GitHub.
 3. Click **Create app** → **Deploy a public app from GitHub**.
@@ -147,14 +155,52 @@ If the pickled models were created with a different scikit-learn version than th
 detects this on start-up and transparently retrains the five models from the bundled `data/promise_defects.csv`
 (about 30 seconds), so deployment never fails because of version drift.
 
+<div style="page-break-before: always; break-before: page;"></div>
+
 ## 9. Screenshots Section
 
-**Local execution**
+### Local execution
 
-<!-- Add a screenshot of the app running locally (e.g. http://localhost:8501) -->
-`<LOCAL_EXECUTION_SCREENSHOT>`
+Run with `streamlit run app.py` and opened at `http://localhost:8501`.
 
-**Streamlit Cloud deployment**
+<div style="page-break-inside: avoid; break-inside: avoid;"><p style="page-break-after: avoid; break-after: avoid;"><strong>Figure L1 - Terminal: app started (<code>streamlit run app.py</code>)</strong></p><img src="Evidence/local_01_terminal_run.png" alt="Local terminal - streamlit run app.py" style="width:100%;"></div>
 
-<!-- Add a screenshot of the deployed app (https://<your-app>.streamlit.app) -->
-`<STREAMLIT_CLOUD_SCREENSHOT>`
+<div style="page-break-before: always; break-before: page; page-break-inside: avoid; break-inside: avoid;"><p style="page-break-after: avoid; break-after: avoid;"><strong>Figure L2 - Home page</strong></p><img src="Evidence/local_02_home.png" alt="Home page" style="width:100%;"></div>
+
+<div style="page-break-before: always; break-before: page; page-break-inside: avoid; break-inside: avoid;"><p style="page-break-after: avoid; break-after: avoid;"><strong>Figure L3 - Home page: hold-out results from training</strong></p><img src="Evidence/local_03_home_training_results.png" alt="Hold-out results from training" style="width:100%;"></div>
+
+<div style="page-break-before: always; break-before: page; page-break-inside: avoid; break-inside: avoid;"><p style="page-break-after: avoid; break-after: avoid;"><strong>Figure L4 - Upload and validate <code>test_data.csv</code></strong></p><img src="Evidence/local_04_upload_validate.png" alt="Upload and validate" style="width:100%;"></div>
+
+<div style="page-break-before: always; break-before: page; page-break-inside: avoid; break-inside: avoid;"><p style="page-break-after: avoid; break-after: avoid;"><strong>Figure L5 - Evaluate Model (Logistic Regression): prediction results and metrics</strong></p><img src="Evidence/local_05_evaluate_prediction_results.png" alt="Prediction results" style="width:100%;"></div>
+
+<div style="page-break-before: always; break-before: page; page-break-inside: avoid; break-inside: avoid;"><p style="page-break-after: avoid; break-after: avoid;"><strong>Figure L6 - Evaluate Model (Logistic Regression): confusion matrix heatmap</strong></p><img src="Evidence/local_06_confusion_matrix.png" alt="Confusion matrix heatmap" style="width:100%;"></div>
+
+<div style="page-break-before: always; break-before: page; page-break-inside: avoid; break-inside: avoid;"><p style="page-break-after: avoid; break-after: avoid;"><strong>Figure L7 - Evaluate Model (Logistic Regression): ROC curve</strong></p><img src="Evidence/local_07_roc_curve.png" alt="ROC curve" style="width:100%;"></div>
+
+<div style="page-break-before: always; break-before: page; page-break-inside: avoid; break-inside: avoid;"><p style="page-break-after: avoid; break-after: avoid;"><strong>Figure L8 - Evaluate Model (Logistic Regression): classification report</strong></p><img src="Evidence/local_08_classification_report.png" alt="Classification report" style="width:100%;"></div>
+
+<div style="page-break-before: always; break-before: page; page-break-inside: avoid; break-inside: avoid;"><p style="page-break-after: avoid; break-after: avoid;"><strong>Figure L9 - Compare Models: leaderboard of all five models</strong></p><img src="Evidence/local_09_compare_leaderboard.png" alt="Model comparison leaderboard" style="width:100%;"></div>
+
+<div style="page-break-before: always; break-before: page; page-break-inside: avoid; break-inside: avoid;"><p style="page-break-after: avoid; break-after: avoid;"><strong>Figure L10 - Compare Models: performance comparison chart</strong></p><img src="Evidence/local_10_compare_performance_chart.png" alt="Model performance comparison chart" style="width:100%;"></div>
+
+<div style="page-break-before: always; break-before: page; page-break-inside: avoid; break-inside: avoid;"><p style="page-break-after: avoid; break-after: avoid;"><strong>Figure L11 - Compare Models: radar chart</strong></p><img src="Evidence/local_11_compare_radar.png" alt="Radar chart" style="width:100%;"></div>
+
+<div style="page-break-before: always; break-before: page; page-break-inside: avoid; break-inside: avoid;"><p style="page-break-after: avoid; break-after: avoid;"><strong>Figure L12 - Compare Models: ROC curves of all five models</strong></p><img src="Evidence/local_12_compare_roc_curves.png" alt="ROC curves of all models" style="width:100%;"></div>
+
+<div style="page-break-before: always; break-before: page;"></div>
+
+### Streamlit Cloud deployment
+
+Live app: https://machine-learning-assignment-2-muthu.streamlit.app/
+
+<div style="page-break-inside: avoid; break-inside: avoid;"><p style="page-break-after: avoid; break-after: avoid;"><strong>Figure C1 - Streamlit Cloud: upload and validate</strong></p><img src="Evidence/cloud_01_upload_validate.png" alt="Cloud - upload and validate" style="width:100%;"></div>
+
+<div style="page-break-before: always; break-before: page; page-break-inside: avoid; break-inside: avoid;"><p style="page-break-after: avoid; break-after: avoid;"><strong>Figure C2 - Streamlit Cloud: Evaluate Model (Decision Tree) prediction results</strong></p><img src="Evidence/cloud_02_evaluate_prediction_results.png" alt="Cloud - evaluate model (Decision Tree) prediction results" style="width:100%;"></div>
+
+<div style="page-break-before: always; break-before: page; page-break-inside: avoid; break-inside: avoid;"><p style="page-break-after: avoid; break-after: avoid;"><strong>Figure C3 - Streamlit Cloud: confusion matrix</strong></p><img src="Evidence/cloud_03_confusion_matrix.png" alt="Cloud - confusion matrix" style="width:100%;"></div>
+
+<div style="page-break-before: always; break-before: page; page-break-inside: avoid; break-inside: avoid;"><p style="page-break-after: avoid; break-after: avoid;"><strong>Figure C4 - Streamlit Cloud: model comparison leaderboard</strong></p><img src="Evidence/cloud_04_compare_leaderboard.png" alt="Cloud - model comparison leaderboard" style="width:100%;"></div>
+
+> The screenshots were taken on a machine whose scikit-learn version differs from the one used to create the saved
+> models, so the app retrained the models on start-up (see section 8). Because of this, a few values (for example
+> Logistic Regression MCC 0.256, KNN recall 0.646-0.648) differ slightly from the table in section 4.
