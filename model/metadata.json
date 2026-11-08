@@ -1,0 +1,141 @@
+{
+  "source": "PROMISE repository (NASA MDP: JM1, KC1, KC2, PC1)",
+  "raw_rows": 14625,
+  "projects": {
+    "JM1": 10885,
+    "KC1": 2109,
+    "PC1": 1109,
+    "KC2": 522
+  },
+  "n_features": 21,
+  "feature_columns": [
+    "loc",
+    "v(g)",
+    "ev(g)",
+    "iv(g)",
+    "n",
+    "v",
+    "l",
+    "d",
+    "i",
+    "e",
+    "b",
+    "t",
+    "lOCode",
+    "lOComment",
+    "lOBlank",
+    "locCodeAndComment",
+    "uniq_Op",
+    "uniq_Opnd",
+    "total_Op",
+    "total_Opnd",
+    "branchCount"
+  ],
+  "target_column": "defects",
+  "class_labels": {
+    "0": "Non Defective",
+    "1": "Defective"
+  },
+  "random_state": 42,
+  "test_size": 0.2,
+  "preprocessing": {
+    "rows_loaded": 14625,
+    "missing_cells": 25,
+    "duplicates_removed": 3250,
+    "invalid_by_rule": {
+      "module without code (loc < 1)": 6,
+      "v(g) greater than loc": 23,
+      "lOCode greater than loc": 9,
+      "Halstead length != operators + operands": 142,
+      "Halstead level l above 1": 20
+    },
+    "invalid_removed": 182,
+    "rows_final": 11193,
+    "missing_cells_final": 20,
+    "train_rows": 8954,
+    "test_rows": 2239,
+    "train_rows_after_balancing": 14008,
+    "class_distribution_clean": {
+      "Non Defective": 8755,
+      "Defective": 2438
+    },
+    "class_distribution_train": {
+      "Non Defective": 7004,
+      "Defective": 1950
+    },
+    "class_distribution_test": {
+      "Non Defective": 1751,
+      "Defective": 488
+    },
+    "balancing": "random over-sampling of the minority class (train only)",
+    "transform": "log1p on all metrics, then StandardScaler"
+  },
+  "hyperparameters": {
+    "Logistic Regression": {
+      "C": 10,
+      "class_weight": null,
+      "dual": false,
+      "fit_intercept": true,
+      "intercept_scaling": 1,
+      "l1_ratio": 0.0,
+      "max_iter": 3000,
+      "n_jobs": null,
+      "penalty": "deprecated",
+      "random_state": 42,
+      "solver": "lbfgs",
+      "tol": 0.0001,
+      "verbose": 0,
+      "warm_start": false
+    },
+    "Decision Tree": {
+      "ccp_alpha": 0.0,
+      "class_weight": null,
+      "criterion": "gini",
+      "max_depth": 4,
+      "max_features": null,
+      "max_leaf_nodes": null,
+      "min_impurity_decrease": 0.0,
+      "min_samples_leaf": 20,
+      "min_samples_split": 2,
+      "min_weight_fraction_leaf": 0.0,
+      "monotonic_cst": null,
+      "random_state": 42,
+      "splitter": "best"
+    },
+    "KNN": {
+      "algorithm": "auto",
+      "leaf_size": 30,
+      "metric": "minkowski",
+      "metric_params": null,
+      "n_jobs": null,
+      "n_neighbors": 101,
+      "p": 2,
+      "weights": "uniform"
+    },
+    "Naive Bayes": {
+      "priors": null,
+      "var_smoothing": 0.1
+    },
+    "SVM": {
+      "C": 1,
+      "break_ties": false,
+      "cache_size": 200,
+      "class_weight": null,
+      "coef0": 0.0,
+      "decision_function_shape": "ovr",
+      "degree": 3,
+      "gamma": 0.01,
+      "kernel": "rbf",
+      "max_iter": -1,
+      "probability": true,
+      "random_state": 42,
+      "shrinking": true,
+      "tol": 0.001,
+      "verbose": false
+    }
+  },
+  "versions": {
+    "python": "3.13.12",
+    "scikit-learn": "1.8.0"
+  }
+}
